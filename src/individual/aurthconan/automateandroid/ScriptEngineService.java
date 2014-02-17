@@ -19,14 +19,11 @@
 
 package individual.aurthconan.automateandroid;
 
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.EvaluatorException;
-import org.mozilla.javascript.ScriptableObject;
-
 import android.app.Service;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.IBinder;
-import android.util.Log;
 
 public class ScriptEngineService extends Service {
     @Override
@@ -46,21 +43,13 @@ public class ScriptEngineService extends Service {
         if ( action.equals("individual.aurthconan.automateandroid.run_script") ) {
             String scriptString = intent.getStringExtra("script");
             String name = intent.getStringExtra("name");
-            org.mozilla.javascript.Context context = Context.enter();
-            try {
-                context.setOptimizationLevel(-1);
-                ScriptableObject scriptableObject = context.initStandardObjects();
-                Object androidContext = Context.javaToJS(this, scriptableObject);
-                ScriptableObject.putProperty(scriptableObject, "android_context", androidContext);
-                org.mozilla.javascript.Script script = context.compileString(scriptString, name, 0, null);
-                script.exec(context, scriptableObject);
-            }
-            catch (EvaluatorException compileErr) {
-                Log.e("compile err", compileErr.lineNumber() + ":" + compileErr.columnNumber() + "->" + compileErr.details() );
-            }
-            finally {
-                Context.exit();
-            }
+            // Spell spell = new Spell(scriptString, name);
+            // spell.enable();
+            ContentValues values = new ContentValues();
+            values.put(SpellLibrary.NAME_COLUMN, name);
+            values.put(SpellLibrary.SCRIPT_COLUMN, scriptString);
+            values.put(SpellLibrary.ENABLE_COLUMN, 1);
+            getContentResolver().insert(Uri.parse("content://" + SpellLibrary.AUTHORITY+"/"+SpellLibrary.SPELLS), values);
         }
         return startId;
     }
