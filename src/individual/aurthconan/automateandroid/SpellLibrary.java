@@ -29,12 +29,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.util.Log;
 
 /*
  * Persistent spell library
  */
 public class SpellLibrary extends ContentProvider {
     public static final String AUTHORITY = "individual.aurthconan.automateandroid.spell";
+    public static Uri SPELL_LIST_URI = Uri.parse("content://" + SpellLibrary.AUTHORITY+"/"+SpellLibrary.SPELLS);
     public static final String SPELLS = "spell";
     public static final String SPELLS_TABLE = "spells";
 
@@ -46,8 +48,10 @@ public class SpellLibrary extends ContentProvider {
 
     private static UriMatcher mMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     private static final int SPELL_LIST = 1;
+    private static final int SPELL_ID = 2;
     static {
         mMatcher.addURI(AUTHORITY, SPELLS, SPELL_LIST);
+        mMatcher.addURI(AUTHORITY, SPELLS+"/#", SPELL_ID);
     }
 
     @Override
@@ -71,11 +75,14 @@ public class SpellLibrary extends ContentProvider {
             SQLiteDatabase db = mDBHelper.getWritableDatabase();
             long rowId = db.insert(SPELLS_TABLE, null, arg1);
             if (rowId > 0) {
-                newUri = ContentUris.withAppendedId(Uri.parse(AUTHORITY), rowId);
+                newUri = ContentUris.withAppendedId(SPELL_LIST_URI, rowId);
             }
             break;
         }
-        
+        if (newUri != null) {
+            getContext().getContentResolver().notifyChange(newUri, null);
+        }
+
         return newUri;
     }
 
@@ -96,6 +103,15 @@ public class SpellLibrary extends ContentProvider {
         switch(match) {
         case SPELL_LIST:
             qb.setTables(SPELLS_TABLE);
+            break;
+        case SPELL_ID:
+            qb.setTables(SPELLS_TABLE);
+            String where = "(_id = " + arg0.getPathSegments().get(1) + ")";
+            if ( selection != null ) {
+                selection += "AND " + where;
+            } else {
+                selection = where;
+            }
             break;
         }
         Cursor cursor = qb.query(db, projection, selection, selectionArgs, null, null, sort);

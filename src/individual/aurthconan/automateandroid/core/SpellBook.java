@@ -19,28 +19,73 @@
 
 package individual.aurthconan.automateandroid.core;
 
+import individual.aurthconan.automateandroid.SpellLibrary;
+
 import java.util.HashMap;
+
+import android.content.Context;
+import android.database.ContentObserver;
+import android.database.Cursor;
+import android.net.Uri;
+import android.util.Log;
 
 /*
  * Manage spell life cycle
  */
 public class SpellBook {
-    public void enableSpell(String name) {
-        Spell spell = mSpells.get(name);
-        if (spell == null) {
-            return;
-        }
-        spell.enable();
+    public SpellBook(Context context) {
+        Log.i("SpellBook", "SpellBook::SpellBook");
+        mContext = context;
+        mContentObserver = new ContentObserver(null) {
+            @Override
+            public void onChange(boolean selfChange, Uri uri) {
+                if (uri != null) {
+                    Log.e("SpellBook", uri.toString());
+                    uriStateChanged(uri);
+                }
+            }
+
+            @Override
+            public void onChange(boolean selfChange) {
+                onChange( selfChange, null);
+            }
+            
+        };
+        context.getContentResolver().registerContentObserver(SpellLibrary.SPELL_LIST_URI,
+                                        true, mContentObserver);
     }
 
-    public void disableSpell(String name) {
-        Spell spell = mSpells.get(name);
-        if (spell == null) {
+    private void uriStateChanged(Uri uri) {
+        Cursor cursor = mContext.getContentResolver().query(uri,
+                                                new String[]{SpellLibrary.ID_COLUMN,
+                                                             SpellLibrary.ENABLE_COLUMN,
+                                                             SpellLibrary.NAME_COLUMN,
+                                                             SpellLibrary.SCRIPT_COLUMN},
+                                                null, null, null);
+        if (cursor.getCount() == 0) {
             return;
+        } else {
+            cursor.moveToFirst();
         }
-        spell.disable();
-        mSpells.remove(name);
+        Long id = cursor.getLong(0);
+        boolean enabled = cursor.getInt(1)==1;
+        String name = cursor.getString(2);
+        String scriptString = cursor.getString(3);
+
+        if (mSpells.containsKey(id) && !enabled) {
+            // disable spell
+            Spell spell = mSpells.get(id);
+            mSpells.remove(id);
+            spell.disable();
+        } else if (!mSpells.containsKey(id) && enabled) {
+            // enable spell
+            Spell spell = new Spell(scriptString, name);
+            spell.enable();
+            mSpells.put(id, spell);
+        }
     }
 
-    private HashMap<String, Spell> mSpells;
+    private Context mContext;
+    private HashMap<Long, Spell> mSpells = new HashMap<Long, Spell>();
+    private ContentObserver mContentObserver;
 }

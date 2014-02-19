@@ -133,5 +133,5 @@ public class Spell {
     private Script mScript;
     private String mName;
     private boolean mEnabled = false;
-    private Vector<ResourceHandler> mResourceHandler;
+    private Vector<ResourceHandler> mResourceHandler = new Vector<ResourceHandler>();
 }

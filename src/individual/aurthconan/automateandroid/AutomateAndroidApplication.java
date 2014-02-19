@@ -19,6 +19,7 @@
 
 package individual.aurthconan.automateandroid;
 
+import individual.aurthconan.automateandroid.core.SpellBook;
 import android.app.Application;
 import android.content.Context;
 
@@ -29,6 +30,7 @@ public class AutomateAndroidApplication extends Application {
         super.onCreate();
         mContext = getApplicationContext();
     }
+
 
     public static Context mContext = null;
 }

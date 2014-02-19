@@ -19,6 +19,7 @@
 
 package individual.aurthconan.automateandroid;
 
+import individual.aurthconan.automateandroid.core.SpellBook;
 import android.app.Service;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -34,6 +35,13 @@ public class ScriptEngineService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        Thread init = new Thread() {
+            @Override
+            public void run() {
+                mSpellBook = new SpellBook(AutomateAndroidApplication.mContext);
+            }
+        };
+        init.run();
     }
 
     @Override
@@ -49,10 +57,10 @@ public class ScriptEngineService extends Service {
             values.put(SpellLibrary.NAME_COLUMN, name);
             values.put(SpellLibrary.SCRIPT_COLUMN, scriptString);
             values.put(SpellLibrary.ENABLE_COLUMN, 1);
-            getContentResolver().insert(Uri.parse("content://" + SpellLibrary.AUTHORITY+"/"+SpellLibrary.SPELLS), values);
+            getContentResolver().insert(SpellLibrary.SPELL_LIST_URI, values);
         }
         return startId;
     }
 
-
+    public SpellBook mSpellBook;
 }

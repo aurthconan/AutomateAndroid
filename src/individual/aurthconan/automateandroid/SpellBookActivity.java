@@ -38,7 +38,7 @@ public class SpellBookActivity extends Activity {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         Cursor cursor =
-                getContentResolver().query(Uri.parse("content://" + SpellLibrary.AUTHORITY+"/"+SpellLibrary.SPELLS),
+                getContentResolver().query(SpellLibrary.SPELL_LIST_URI,
                         new String[]{SpellLibrary.ID_COLUMN, SpellLibrary.ENABLE_COLUMN, SpellLibrary.NAME_COLUMN}, null, null, null);
         CursorAdapter adapter = new CursorAdapter(this.getApplicationContext(), cursor, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER) {
             @Override
