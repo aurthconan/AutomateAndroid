@@ -19,9 +19,9 @@
 
 package individual.aurthconan.automateandroid.core;
 
-import java.util.Vector;
-
 import individual.aurthconan.automateandroid.AutomateAndroidApplication;
+
+import java.util.Vector;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Script;

@@ -23,6 +23,8 @@ import individual.aurthconan.automateandroid.SpellLibrary;
 
 import java.util.HashMap;
 
+import org.mozilla.javascript.WrappedException;
+
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -80,8 +82,12 @@ public class SpellBook {
         } else if (!mSpells.containsKey(id) && enabled) {
             // enable spell
             Spell spell = new Spell(scriptString, name);
-            spell.enable();
-            mSpells.put(id, spell);
+            try {
+                spell.enable();
+                mSpells.put(id, spell);
+            } catch (WrappedException e) {
+                Log.e("SpellBook", "got exception " + e.getMessage());
+            }
         }
     }
 

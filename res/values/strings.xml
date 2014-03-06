@@ -1,5 +1,9 @@
 <resources>
 
     <string name="app_name">AutomateAndroid</string>
+    <string name="spell_library_permission_group_desc">Permission group to access Spell library.</string>
+    <string name="spell_library_permission_all_desc">Read/Write spell library.</string>
+    <string name="spell_library_permission_read_desc">Read spell library.</string>
+    <string name="spell_library_permission_write_desc">Write spell library.</string>
 
 </resources>
