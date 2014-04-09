@@ -20,6 +20,7 @@
 package individual.aurthconan.automateandroid.core;
 
 import individual.aurthconan.automateandroid.AutomateAndroidApplication;
+import individual.aurthconan.automateandroid.module.ModuleManager;
 
 import java.util.Vector;
 
@@ -126,6 +127,10 @@ public class Spell {
         ScriptableObject scope = context.initStandardObjects();
         Object androidContext = Context.javaToJS(AutomateAndroidApplication.mContext, scope);
         ScriptableObject.putProperty(scope, ANDROID_CONTEXT_VARIABLE, androidContext);
+        Vector<ScriptableObject> objects = ModuleManager.getModule();
+        for ( ScriptableObject obj : objects) {
+            ScriptableObject.putProperty(scope, obj.getClassName(), obj);
+        }
         return scope;
     }
 
