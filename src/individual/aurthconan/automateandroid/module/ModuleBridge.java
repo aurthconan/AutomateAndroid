@@ -20,7 +20,7 @@
 
 package individual.aurthconan.automateandroid.module;
 
-import individual.aurthconan.automateandroid.module.ClassDefinition.MethodDefinition;
+import individual.aurthconan.automateandroid.module.ModuleDefinition.MethodDefinition;
 
 import org.mozilla.javascript.BaseFunction;
 import org.mozilla.javascript.Context;
@@ -30,9 +30,15 @@ import org.mozilla.javascript.ScriptableObject;
 import android.util.Log;
 
 public class ModuleBridge extends ScriptableObject {
-    public ModuleBridge( ClassDefinition def ) {
+
+    public ModuleBridge( ModuleDefinition def ) {
         super();
+        if ( def == null ) {
+            Log.e("ModuleBridge", "def is null");
+            throw new Error();
+        }
         mDefinition = def;
+        Log.e("ModuleBridge", "mDefinition.mMethods.size " + Integer.toString(mDefinition.mMethods.size()));
         for ( int i = 0, max = mDefinition.mMethods.size();
                 i < max; ++i ) {
             MethodCallBridge methodBridge = new MethodCallBridge( i );
@@ -45,7 +51,7 @@ public class ModuleBridge extends ScriptableObject {
         return mDefinition.mName;
     }
 
-    private final ClassDefinition mDefinition;
+    private final ModuleDefinition mDefinition;
     private class MethodCallBridge extends BaseFunction {
         private final int mMethodIndex;
 

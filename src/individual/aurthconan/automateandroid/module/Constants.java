@@ -20,25 +20,10 @@
 
 package individual.aurthconan.automateandroid.module;
 
-import java.util.Vector;
-
-public class ClassDefinition {
-
-    public enum TYPE{
-        UNSUPPORTED_TYPE,
-        STRING_TYPE,
-        INTEGER_TYPE,
-        BOOLEAN_TYPE,
-        DOUBLE_TYPE,
-        VOID_TYPE,
-    }
-
-    static public class MethodDefinition {
-        public TYPE mReturnType;
-        public String mName;
-        public Vector<TYPE> mArgsType = new Vector<TYPE>();
-    }
-
-    public String mName;
-    public Vector<MethodDefinition> mMethods = new Vector<MethodDefinition>();
+public class Constants {
+    public final static String ACTION_AUTOMATE_ANDROID_SUBMODULE = "individual.aurthconan.automateandroid.submodule";
+    public final static String DESCRIPTOR = "individual.aurthconan.automateandroid.submodule";
+    public final static int TRANSACTION_getDefinition = (android.os.IBinder.FIRST_CALL_TRANSACTION + 0);
+    public final static int TRANSACTION_registerForEventTrigger = (android.os.IBinder.FIRST_CALL_TRANSACTION + 1);
+    public final static int TRANSACTION_MODULE_METHOD_START = TRANSACTION_registerForEventTrigger + 1;
 }

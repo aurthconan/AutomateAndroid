@@ -25,6 +25,13 @@
     <uses-permission
         android:name="individual.aurthconan.SpellLibrary.All" />
 
+    <permission
+        android:name="individual.aurthconan.Submodule"
+        android:protectionLevel="signature" />
+
+    <uses-permission
+        android:name="individual.aurthconan.Submodule" />
+
     <uses-sdk
         android:minSdkVersion="15"
         android:targetSdkVersion="19" />

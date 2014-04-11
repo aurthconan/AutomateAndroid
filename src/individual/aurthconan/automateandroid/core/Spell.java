@@ -127,7 +127,7 @@ public class Spell {
         ScriptableObject scope = context.initStandardObjects();
         Object androidContext = Context.javaToJS(AutomateAndroidApplication.mContext, scope);
         ScriptableObject.putProperty(scope, ANDROID_CONTEXT_VARIABLE, androidContext);
-        Vector<ScriptableObject> objects = ModuleManager.getModule();
+        Vector<ScriptableObject> objects = ModuleManager.getModuleManager( AutomateAndroidApplication.mContext ).getModule();
         for ( ScriptableObject obj : objects) {
             ScriptableObject.putProperty(scope, obj.getClassName(), obj);
         }
