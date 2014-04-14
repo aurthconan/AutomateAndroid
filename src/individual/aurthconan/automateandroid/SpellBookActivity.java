@@ -22,7 +22,6 @@ package individual.aurthconan.automateandroid;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.CursorAdapter;
 import android.view.View;

@@ -55,6 +55,20 @@ public class ModuleDefinition implements Parcelable {
         VOID_TYPE,
     }
 
+    static public Class<?> getClazz( TYPE type ) {
+        switch ( type ) {
+        case STRING_TYPE:
+            return String.class;
+        case INTEGER_TYPE:
+            return Integer.class;
+        case BOOLEAN_TYPE:
+            return Boolean.class;
+        case DOUBLE_TYPE:
+            return Double.class;
+        }
+        return null;
+    }
+
     static public class MethodDefinition implements Parcelable {
         public MethodDefinition() {
         }

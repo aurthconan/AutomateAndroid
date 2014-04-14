@@ -20,7 +20,6 @@
 package individual.aurthconan.automateandroid.module;
 
 import individual.aurthconan.automateandroid.module.ModuleDefinition.MethodDefinition;
-import individual.aurthconan.automateandroid.module.ModuleDefinition.TYPE;
 
 import java.util.HashMap;
 import java.util.List;
@@ -61,9 +60,6 @@ public class ModuleManager {
             @Override
             public void onServiceDisconnected(ComponentName binder) {
                 mModuleBinder = null;
-                synchronized(mBinderLock) {
-                    mBinderLock.notifyAll();
-                }
             }
 
         };
@@ -77,7 +73,7 @@ public class ModuleManager {
             Intent intent = new Intent(Constants.ACTION_AUTOMATE_ANDROID_SUBMODULE);
             intent.setClassName(mPackageName, mServiceName);
 
-            if (!ModuleManager.this.mContext.bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE)) {
+            if (!mContext.bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE)) {
                 throw new RuntimeException("ServiceNotFound");
             }
             try {
@@ -97,15 +93,13 @@ public class ModuleManager {
             if ( mModule != null || mModuleBinder == null ) {
                 return;
             }
-            ModuleBinderHelper helper = new ModuleBinderHelper();
             try {
-                mModule = helper.getModuleDefinition( mModuleBinder );
+                mModule = ModuleBinderHelper.getModuleDefinition( mModuleBinder );
                 Log.e("ModuleManager", "getModuleDefinition " + mModule.mName );
                 for ( MethodDefinition method: mModule.mMethods ) {
                     Log.e("ModuleManager", method.mReturnType.toString() + " " + method.mName);
                 }
             } catch (RemoteException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
@@ -115,7 +109,7 @@ public class ModuleManager {
         Vector<ScriptableObject> vector = new Vector<ScriptableObject>();
         Log.e("ModuleManager", "mServiceMap.size " + Integer.toString(mServiceMap.size()));
 
-        for ( ModuleConnectionHelper moduleHelper : mServiceMap ) {
+        for ( ModuleConnectionHelper moduleHelper : mServiceMap.values() ) {
             vector.add( new ModuleBridge( moduleHelper.mModule ) );
         }
         return vector;
@@ -128,12 +122,16 @@ public class ModuleManager {
                 PackageManager.GET_INTENT_FILTERS);
         for ( ResolveInfo info: list ) {
             Log.i("ModuleManager", info.serviceInfo.packageName + ":" + info.serviceInfo.name);
-            mServiceMap.add(new ModuleConnectionHelper(info.serviceInfo.packageName, info.serviceInfo.name));
-        }
-        for ( ModuleConnectionHelper module : mServiceMap ) {
+            ModuleConnectionHelper module = new ModuleConnectionHelper(info.serviceInfo.packageName, info.serviceInfo.name);
             module.bindService();
             module.initializeModuleDefinition();
-            module.unbindService();
+            // module.unbindService();
+            if ( mServiceMap.containsKey(module.mModule.mName) ) {
+                Log.e("ModuleManager", module.mModule.mName + " is already defined in pkg "
+                                        + mServiceMap.get(module.mModule.mName).mPackageName );
+            } else {
+                mServiceMap.put(module.mModule.mName, module);
+            }
         }
     }
 
@@ -147,5 +145,22 @@ public class ModuleManager {
     }
 
     private Context mContext;
-    public Vector<ModuleConnectionHelper> mServiceMap = new Vector<ModuleConnectionHelper>();
+    public HashMap<String, ModuleConnectionHelper> mServiceMap = new HashMap<String, ModuleConnectionHelper>();
+
+    public synchronized Object invokeModule( String moduleName, int methodIndex, Object[] args ) {
+        ModuleConnectionHelper module = mServiceMap.get(moduleName);
+        if ( module == null ) {
+            Log.e("ModuleManager", moduleName + " not found" );
+            return null;
+        }
+        // module.bindService();
+        MethodDefinition def = module.mModule.mMethods.get(methodIndex);
+        Object result = null;
+        try {
+            result = ModuleBinderHelper.invokeMethod(module.mModuleBinder, def.mReturnType, methodIndex, args);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 }

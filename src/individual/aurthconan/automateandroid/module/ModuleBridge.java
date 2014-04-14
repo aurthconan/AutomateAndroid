@@ -62,11 +62,23 @@ public class ModuleBridge extends ScriptableObject {
         @Override
         public Object call(Context arg0, Scriptable arg1, Scriptable arg2,
                 Object[] arg3) {
-            // TODO Auto-generated method stub
-            MethodDefinition def = ModuleBridge.this.mDefinition.mMethods.get(mMethodIndex);
+            MethodDefinition def = mDefinition.mMethods.get(mMethodIndex);
             Log.e("ModuleBridge", "callMethod " + def.mName );
-            return null;
+            if ( def.mArgsType.size() != arg3.length ) {
+                Log.e("ModuleBridge", "Method " + mDefinition.mName + "." + def.mName 
+                                      + " requires " + def.mArgsType.size() + "arguments but got"
+                                      + arg3.length );
+            }
+            Object[] args = new Object[def.mArgsType.size()];
+            for ( int i = 0, max = def.mArgsType.size(); i < max; ++i ) {
+                args[i] = Context.jsToJava(arg3[i], ModuleDefinition.getClazz(def.mArgsType.get(i)));
+            }
+            ModuleManager moduleManager = ModuleManager.getModuleManager(null);
+            Object result = moduleManager.invokeModule(mDefinition.mName, mMethodIndex, args);
+            if ( result != null ) {
+                Log.e("ModuleBridge", "result " + result.toString() );
+            }
+            return result;
         }
-        
     }
 }

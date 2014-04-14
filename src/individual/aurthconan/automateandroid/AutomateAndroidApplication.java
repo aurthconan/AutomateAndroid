@@ -19,7 +19,6 @@
 
 package individual.aurthconan.automateandroid;
 
-import individual.aurthconan.automateandroid.core.SpellBook;
 import android.app.Application;
 import android.content.Context;
 

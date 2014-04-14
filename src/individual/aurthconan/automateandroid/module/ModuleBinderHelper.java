@@ -20,6 +20,7 @@
 
 package individual.aurthconan.automateandroid.module;
 
+import individual.aurthconan.automateandroid.module.ModuleDefinition.TYPE;
 import android.os.IBinder;
 import android.os.Parcel;
 import android.os.RemoteException;
@@ -29,7 +30,7 @@ public class ModuleBinderHelper {
     // many methods set as package access on purpose
 
     // ModuleDefinition getModuleDefinition()
-    ModuleDefinition getModuleDefinition( IBinder binder ) throws RemoteException {
+    static ModuleDefinition getModuleDefinition( IBinder binder ) throws RemoteException {
         ModuleDefinition result = null;
         Parcel data = Parcel.obtain();
         Parcel reply = Parcel.obtain();
@@ -49,23 +50,55 @@ public class ModuleBinderHelper {
     }
 
     // void registerForEventTrigger(${predefined argument})
-    void registerForEventTrigger( IBinder binder, Object[] args ) {
+    static void registerForEventTrigger( IBinder binder, Object[] args ) throws RemoteException {
         Parcel data = Parcel.obtain();
         Parcel reply = Parcel.obtain();
         try {
             data.writeInterfaceToken(Constants.DESCRIPTOR);
             writeArguments( data, args );
+            binder.transact(Constants.TRANSACTION_registerForEventTrigger, data, reply, 0);
+            reply.readException();
         } finally {
             data.recycle();
             reply.recycle();
         }
     }
 
-    private void writeArguments( Parcel out, Object[] args ) {
+    static Object invokeMethod( IBinder binder, TYPE returnType, int methodIndex, Object[] args ) throws RemoteException {
+        Parcel data = Parcel.obtain();
+        Parcel reply = Parcel.obtain();
+        Object result = null;
+        try {
+            data.writeInterfaceToken(Constants.DESCRIPTOR);
+            writeArguments( data, args );
+            binder.transact(Constants.TRANSACTION_MODULE_METHOD_START+methodIndex, data, reply, 0);
+            reply.readException();
+            if ( returnType == TYPE.STRING_TYPE ) {
+                if ( reply.readInt() == 1 ) {
+                    result = reply.readString();
+                }
+            } else if ( returnType == TYPE.INTEGER_TYPE ) {
+                result = reply.readInt();
+            } else if ( returnType == TYPE.BOOLEAN_TYPE ) {
+                result = reply.readInt()==1;
+            } else if ( returnType == TYPE.DOUBLE_TYPE ) {
+                result = reply.readDouble();
+            }
+        } finally {
+            data.recycle();
+            reply.recycle();
+        }
+        return result;
+    }
+
+    static private void writeArguments( Parcel out, Object[] args ) {
         for ( int i = 0, max = args.length; i < max;++i ) {
             Object arg = args[i];
             if ( arg instanceof String ) {
-                out.writeString((String)arg);
+                if ( arg != null ) {
+                    out.writeInt(1);
+                    out.writeString((String)arg);
+                }
             } else if ( arg instanceof Integer ) {
                 out.writeInt((Integer)arg);
             } else if ( arg instanceof Boolean ) {
