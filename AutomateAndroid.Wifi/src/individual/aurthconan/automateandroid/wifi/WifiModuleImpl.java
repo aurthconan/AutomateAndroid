@@ -22,6 +22,7 @@ package individual.aurthconan.automateandroid.wifi;
 
 import android.content.Context;
 import android.net.wifi.WifiManager;
+import android.util.Log;
 
 public class WifiModuleImpl extends WifiModule.Stub {
     private WifiManager mWifiManager;
@@ -31,11 +32,13 @@ public class WifiModuleImpl extends WifiModule.Stub {
 
     @Override
     public boolean isWifiEnabled() {
+        Log.i("WifiModuleImpl", "isWifiEnabled invoked");
         return mWifiManager.isWifiEnabled();
     }
 
     @Override
     public void setWifiEnabled(boolean on) {
+        Log.i("WifiModuleImpl", "setWifiEnabled invoked " + on);
         mWifiManager.setWifiEnabled(on);
     }
 

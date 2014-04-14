@@ -34,8 +34,8 @@ public interface WifiModule extends IInterface {
     public boolean isWifiEnabled();
     public void setWifiEnabled( boolean on );
 
-    public static final int TRANSACTION_isWifiEnabled = (Constants.TRANSACTION_MODULE_METHOD_START + 1);
-    public static final int TRANSACTION_setWifiEnabled = (Constants.TRANSACTION_MODULE_METHOD_START + 2);
+    public static final int TRANSACTION_isWifiEnabled = (Constants.TRANSACTION_MODULE_METHOD_START + 0);
+    public static final int TRANSACTION_setWifiEnabled = (Constants.TRANSACTION_MODULE_METHOD_START + 1);
 
     public static abstract class Stub extends Binder implements WifiModule {
         public Stub() {

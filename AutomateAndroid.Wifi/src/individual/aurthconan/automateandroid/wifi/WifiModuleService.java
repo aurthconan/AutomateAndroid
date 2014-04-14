@@ -32,8 +32,6 @@ public class WifiModuleService extends Service {
         mWifiModule = new WifiModuleImpl(this);
     }
 
-
-
     @Override
     public IBinder onBind(Intent arg0) {
         return mWifiModule;
