@@ -25,5 +25,7 @@ public class Constants {
     public final static String DESCRIPTOR = "individual.aurthconan.automateandroid.submodule";
     public final static int TRANSACTION_getDefinition = (android.os.IBinder.FIRST_CALL_TRANSACTION + 0);
     public final static int TRANSACTION_registerForEventTrigger = (android.os.IBinder.FIRST_CALL_TRANSACTION + 1);
-    public final static int TRANSACTION_MODULE_METHOD_START = TRANSACTION_registerForEventTrigger + 1;
+
+    // reserve 50 slot for possible generic method. Hope that is enough
+    public final static int TRANSACTION_MODULE_METHOD_START = android.os.IBinder.FIRST_CALL_TRANSACTION + 50;
 }
