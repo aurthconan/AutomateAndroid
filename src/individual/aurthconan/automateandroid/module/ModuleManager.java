@@ -19,7 +19,9 @@
 
 package individual.aurthconan.automateandroid.module;
 
-import individual.aurthconan.automateandroid.module.ModuleDefinition.MethodDefinition;
+import individual.aurthconan.automateandroid.module.lib.Constants;
+import individual.aurthconan.automateandroid.module.lib.ModuleDefinition;
+import individual.aurthconan.automateandroid.module.lib.ModuleDefinition.MethodDefinition;
 
 import java.util.HashMap;
 import java.util.List;

@@ -20,7 +20,9 @@
 
 package individual.aurthconan.automateandroid.module;
 
-import individual.aurthconan.automateandroid.module.ModuleDefinition.TYPE;
+import individual.aurthconan.automateandroid.module.lib.Constants;
+import individual.aurthconan.automateandroid.module.lib.ModuleDefinition;
+import individual.aurthconan.automateandroid.module.lib.ModuleDefinition.TYPE;
 import android.os.IBinder;
 import android.os.Parcel;
 import android.os.RemoteException;
