@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="individual.aurthconan.automateandroid"
+    android:sharedUserId="individual.aurthconan.automateandroid"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -24,9 +25,6 @@
 
     <uses-permission
         android:name="individual.aurthconan.SpellLibrary.All" />
-
-    <uses-permission
-        android:name="individual.aurthconan.Submodule" />
 
     <uses-sdk
         android:minSdkVersion="15"
