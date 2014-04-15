@@ -20,10 +20,10 @@
 
 package individual.aurthconan.automateandroid.wifi;
 
-import individual.aurthconan.automateandroid.module.Constants;
-import individual.aurthconan.automateandroid.module.ModuleDefinition;
-import individual.aurthconan.automateandroid.module.ModuleDefinition.MethodDefinition;
-import individual.aurthconan.automateandroid.module.ModuleDefinition.TYPE;
+import individual.aurthconan.automateandroid.module.lib.Constants;
+import individual.aurthconan.automateandroid.module.lib.ModuleDefinition;
+import individual.aurthconan.automateandroid.module.lib.ModuleDefinition.MethodDefinition;
+import individual.aurthconan.automateandroid.module.lib.ModuleDefinition.TYPE;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.IInterface;

@@ -18,7 +18,7 @@
 */
 
 
-package individual.aurthconan.automateandroid.module;
+package individual.aurthconan.automateandroid.module.lib;
 
 public class Constants {
     public final static String ACTION_AUTOMATE_ANDROID_SUBMODULE = "individual.aurthconan.automateandroid.submodule";

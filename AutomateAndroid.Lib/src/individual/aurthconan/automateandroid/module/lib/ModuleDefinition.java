@@ -18,7 +18,7 @@
 */
 
 
-package individual.aurthconan.automateandroid.module;
+package individual.aurthconan.automateandroid.module.lib;
 
 import java.util.Vector;
 
