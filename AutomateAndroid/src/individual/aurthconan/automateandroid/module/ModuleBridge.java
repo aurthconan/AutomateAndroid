@@ -25,6 +25,7 @@ import individual.aurthconan.automateandroid.module.lib.ModuleDefinition.MethodD
 
 import org.mozilla.javascript.BaseFunction;
 import org.mozilla.javascript.Context;
+import org.mozilla.javascript.Function;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 
@@ -66,7 +67,7 @@ public class ModuleBridge extends ScriptableObject {
             MethodDefinition def = mDefinition.mMethods.get(mMethodIndex);
             Log.e("ModuleBridge", "callMethod " + def.mName );
             if ( def.mArgsType.size() != arg3.length ) {
-                Log.e("ModuleBridge", "Method " + mDefinition.mName + "." + def.mName 
+                Log.e("ModuleBridge", "Method " + mDefinition.mName + "." + def.mName
                                       + " requires " + def.mArgsType.size() + "arguments but got"
                                       + arg3.length );
             }
@@ -80,6 +81,38 @@ public class ModuleBridge extends ScriptableObject {
                 Log.e("ModuleBridge", "result " + result.toString() );
             }
             return result;
+        }
+    }
+
+    // in js, event callback method argument will be the following form
+    // ( eventId, anyNumberOfArgument, callbackFunction )
+    private class RegisterEventCallbackBridge extends BaseFunction {
+        @Override
+        public Object call(Context context, Scriptable arg1, Scriptable arg2,
+                Object[] args) {
+            if ( args.length < 2 ) {
+                Log.i("ModuleManager", "register eventCallback requires at lease 2 argument");
+                return null;
+            }
+            if ( !(args[0] instanceof String && args[args.length-1] instanceof Function) ) {
+                Log.i("ModuleManager", "arguments for register event callback is wrong");
+                return null;
+            }
+            String eventId = (String)args[0];
+            Function callback = (Function) args[args.length-1];
+            Object[] newArgs = new Object[args.length-2];
+            for ( int i = 1; i < args.length-1) {
+                newArgs[i-1] = args[i];
+            }
+
+            ModuleManager moduleManager = ModuleManager.getModuleManager(null);
+            boolean result = moduleManager.registerEventCallback(mDefinition.mName, eventId, newArgs);
+            if ( !result ) {
+                Log.i("ModuleManager", "register failed");
+                return null;
+            }
+
+            return null;
         }
     }
 }

@@ -51,19 +51,23 @@ public class ModuleBinderHelper {
         return result;
     }
 
-    // void registerForEventTrigger(${predefined argument})
-    static void registerForEventTrigger( IBinder binder, Object[] args ) throws RemoteException {
+    // boolean registerForEventTrigger(${predefined argument})
+    static boolean registerForEventTrigger( IBinder binder, String eventId, Object[] args ) throws RemoteException {
+        boolean result = false;
         Parcel data = Parcel.obtain();
         Parcel reply = Parcel.obtain();
         try {
             data.writeInterfaceToken(Constants.DESCRIPTOR);
+            data.writeString(eventId);
             writeArguments( data, args );
             binder.transact(Constants.TRANSACTION_registerForEventTrigger, data, reply, 0);
             reply.readException();
+            result = reply.readInt() == 0;
         } finally {
             data.recycle();
             reply.recycle();
         }
+        return result;
     }
 
     static Object invokeMethod( IBinder binder, TYPE returnType, int methodIndex, Object[] args ) throws RemoteException {

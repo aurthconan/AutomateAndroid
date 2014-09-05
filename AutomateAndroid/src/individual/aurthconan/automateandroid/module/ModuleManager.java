@@ -165,4 +165,19 @@ public class ModuleManager {
         }
         return result;
     }
+
+    public synchronized boolean registerEventCallback( String moduleName, String eventId, Object[] args ) {
+        ModuleConnectionHelper module = mServiceMap.get(moduleName);
+        if ( module == null ) {
+            Log.e("ModuleManager", moduleName + " not found" );
+            return false;
+        }
+        boolean result = false;
+        try {
+            result = ModuleBinderHelper.registerForEventTrigger(module.mModuleBinder, eventId, args);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 }

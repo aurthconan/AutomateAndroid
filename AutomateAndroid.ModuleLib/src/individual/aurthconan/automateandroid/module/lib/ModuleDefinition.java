@@ -65,6 +65,9 @@ public class ModuleDefinition implements Parcelable {
             return Boolean.class;
         case DOUBLE_TYPE:
             return Double.class;
+        case VOID_TYPE:
+        case UNSUPPORTED_TYPE:
+            return null;
         }
         return null;
     }
