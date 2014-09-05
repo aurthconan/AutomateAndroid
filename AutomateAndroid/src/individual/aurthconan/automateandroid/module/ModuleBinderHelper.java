@@ -38,7 +38,7 @@ public class ModuleBinderHelper {
         Parcel reply = Parcel.obtain();
         try {
             data.writeInterfaceToken(Constants.DESCRIPTOR);
-            binder.transact(Constants.TRANSACTION_getDefinition, data,
+            binder.transact(Constants.ModuleMethodId.TRANSACTION_getDefinition, data,
                     reply, 0);
             reply.readException();
             if ( reply.readInt() != 0 ) {
@@ -60,7 +60,7 @@ public class ModuleBinderHelper {
             data.writeInterfaceToken(Constants.DESCRIPTOR);
             data.writeString(eventId);
             writeArguments( data, args );
-            binder.transact(Constants.TRANSACTION_registerForEventTrigger, data, reply, 0);
+            binder.transact(Constants.ModuleMethodId.TRANSACTION_registerForEventTrigger, data, reply, 0);
             reply.readException();
             result = reply.readInt() == 0;
         } finally {
@@ -77,7 +77,7 @@ public class ModuleBinderHelper {
         try {
             data.writeInterfaceToken(Constants.DESCRIPTOR);
             writeArguments( data, args );
-            binder.transact(Constants.TRANSACTION_MODULE_METHOD_START+methodIndex, data, reply, 0);
+            binder.transact(Constants.ModuleMethodId.TRANSACTION_MODULE_METHOD_START+methodIndex, data, reply, 0);
             reply.readException();
             if ( returnType == TYPE.STRING_TYPE ) {
                 if ( reply.readInt() == 1 ) {

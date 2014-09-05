@@ -34,8 +34,8 @@ public interface WifiModule extends IInterface {
     public boolean isWifiEnabled();
     public void setWifiEnabled( boolean on );
 
-    public static final int TRANSACTION_isWifiEnabled = (Constants.TRANSACTION_MODULE_METHOD_START + 0);
-    public static final int TRANSACTION_setWifiEnabled = (Constants.TRANSACTION_MODULE_METHOD_START + 1);
+    public static final int TRANSACTION_isWifiEnabled = (Constants.ModuleMethodId.TRANSACTION_MODULE_METHOD_START + 0);
+    public static final int TRANSACTION_setWifiEnabled = (Constants.ModuleMethodId.TRANSACTION_MODULE_METHOD_START + 1);
 
     public static abstract class Stub extends Binder implements WifiModule {
         public Stub() {
@@ -55,7 +55,7 @@ public interface WifiModule extends IInterface {
                 reply.writeString(Constants.DESCRIPTOR);
                 return true;
             }
-            case Constants.TRANSACTION_getDefinition: {
+            case Constants.ModuleMethodId.TRANSACTION_getDefinition: {
                 data.enforceInterface(Constants.DESCRIPTOR);
 
                 ModuleDefinition def = new ModuleDefinition();
@@ -77,7 +77,7 @@ public interface WifiModule extends IInterface {
                 def.writeToParcel(reply, 0);
                 return true;
             }
-            case Constants.TRANSACTION_registerForEventTrigger: {
+            case Constants.ModuleMethodId.TRANSACTION_registerForEventTrigger: {
                 return true;
             }
             case TRANSACTION_isWifiEnabled: {
